@@ -6,6 +6,14 @@
   <title>THOMSON SYSTEM</title>
   <meta name="description" content="THOMSON SYSTEM – a habit system built on the principles of Atomic Habits.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='44' fill='%23e8590c'/><text x='50' y='66' font-size='46' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>T</text></svg>">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#f7f5f2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#141210" media="(prefers-color-scheme: dark)">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="THOMSON">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -19,7 +27,10 @@
         <small>1% better every day</small>
       </div>
     </div>
-    <button id="themeBtn" class="icon-btn" title="Toggle theme" aria-label="Toggle theme">◐</button>
+    <div class="top-actions">
+      <button id="installBtn" class="btn sm primary" hidden>Install app</button>
+      <button id="themeBtn" class="icon-btn" title="Toggle theme" aria-label="Toggle theme">◐</button>
+    </div>
   </header>
 
   <nav class="tabs">
@@ -175,6 +186,16 @@
         <button class="btn primary" value="save">Save</button>
       </div>
     </form>
+  </dialog>
+
+  <dialog id="iosDialog" class="ios-dialog">
+    <h2>Install on iPhone</h2>
+    <ol>
+      <li>Tap the <b>Share</b> button <span class="share-ico">⬆︎</span> in Safari.</li>
+      <li>Choose <b>Add to Home Screen</b>.</li>
+      <li>Tap <b>Add</b>. THOMSON now opens like an app and works offline.</li>
+    </ol>
+    <div class="dialog-actions"><span class="spacer"></span><button class="btn primary" id="iosClose">Got it</button></div>
   </dialog>
 
   <div id="toast" class="toast" role="status"></div>

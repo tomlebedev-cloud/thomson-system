@@ -13,6 +13,9 @@ A habit system built on the ideas in *Atomic Habits* by James Clear. It's a stat
 - **Scorecard**: the Habits Scorecard, where you rate each daily action as `+`, `=` or `−`.
 - **The System**: a reference for the Four Laws, plus JSON export, import and reset.
 - Light and dark theme, and it works on mobile.
+- **Installable app (PWA)**: add it to your phone's home screen and use it offline. On Android or Chrome, tap **Install app**. On iPhone, use Safari → Share → *Add to Home Screen*.
+
+When you change cached files, bump `CACHE` in `sw.js` (e.g. `thomson-v2`) so old caches are cleared.
 
 ## Run locally
 

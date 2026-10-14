@@ -387,3 +387,37 @@ function toast(msg) {
 }
 
 render();
+
+// ---------- PWA: offline + install ----------
+
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  navigator.serviceWorker.register('sw.js').catch(() => { /* offline support unavailable */ });
+}
+
+const installBtn = $('#installBtn');
+const isStandalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+let installPrompt = null;
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  installPrompt = e;
+  installBtn.hidden = false;
+});
+window.addEventListener('appinstalled', () => {
+  installBtn.hidden = true;
+  toast('THOMSON installed');
+});
+if (isIOS && !isStandalone) installBtn.hidden = false;
+
+installBtn.onclick = async () => {
+  if (installPrompt) {
+    installPrompt.prompt();
+    await installPrompt.userChoice;
+    installPrompt = null;
+    installBtn.hidden = true;
+  } else if (isIOS) {
+    $('#iosDialog').showModal();
+  }
+};
+$('#iosClose').onclick = () => $('#iosDialog').close();
