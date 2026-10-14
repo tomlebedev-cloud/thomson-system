@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>THOMSON SYSTEM</title>
+  <meta name="description" content="THOMSON SYSTEM – a habit system built on the principles of Atomic Habits.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='44' fill='%23e8590c'/><text x='50' y='66' font-size='46' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>T</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">T</span>
+      <div>
+        <strong>THOMSON SYSTEM</strong>
+        <small>1% better every day</small>
+      </div>
+    </div>
+    <button id="themeBtn" class="icon-btn" title="Toggle theme" aria-label="Toggle theme">◐</button>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-view="today">Today</button>
+    <button class="tab" data-view="habits">Habits</button>
+    <button class="tab" data-view="tracker">Tracker</button>
+    <button class="tab" data-view="identity">Identity</button>
+    <button class="tab" data-view="scorecard">Scorecard</button>
+    <button class="tab" data-view="laws">The System</button>
+  </nav>
+
+  <main>
+    <!-- TODAY -->
+    <section id="view-today" class="view active">
+      <div class="hero">
+        <div>
+          <p class="eyebrow" id="todayDate"></p>
+          <h1>Cast your votes for who you're becoming</h1>
+          <p class="muted">Every action is a vote for the type of person you want to be. The goal isn't perfection – it's never missing twice.</p>
+        </div>
+        <div class="ring-wrap">
+          <svg viewBox="0 0 120 120" class="ring">
+            <circle cx="60" cy="60" r="52" class="ring-bg"/>
+            <circle cx="60" cy="60" r="52" class="ring-fg" id="ringFg"/>
+          </svg>
+          <div class="ring-label"><strong id="ringPct">0%</strong><small id="ringCount">0 / 0</small></div>
+        </div>
+      </div>
+      <div id="todayList" class="cards"></div>
+    </section>
+
+    <!-- HABITS -->
+    <section id="view-habits" class="view">
+      <div class="section-head">
+        <h2>Your habits</h2>
+        <button class="btn primary" id="newHabitBtn">+ New habit</button>
+      </div>
+      <div id="habitList" class="cards"></div>
+    </section>
+
+    <!-- TRACKER -->
+    <section id="view-tracker" class="view">
+      <div class="section-head">
+        <h2>Habit tracker</h2>
+        <p class="muted">Last 35 days. Click a cell to mark or unmark it. Don't break the chain.</p>
+      </div>
+      <div id="trackerGrid"></div>
+    </section>
+
+    <!-- IDENTITY -->
+    <section id="view-identity" class="view">
+      <div class="section-head">
+        <h2>Identity</h2>
+        <p class="muted">The goal is not to read a book, it's to become a reader. Each completion is one vote for the identity behind it.</p>
+      </div>
+      <div id="identityList" class="cards"></div>
+    </section>
+
+    <!-- SCORECARD -->
+    <section id="view-scorecard" class="view">
+      <div class="section-head">
+        <h2>Habits Scorecard</h2>
+        <p class="muted">List your daily actions from the moment you wake up. Rate each one: <b class="good">+</b> good, <b class="neutral">=</b> neutral, <b class="bad">−</b> bad. Change begins with awareness.</p>
+      </div>
+      <form id="scoreForm" class="inline-form">
+        <input id="scoreInput" placeholder="e.g. Wake up and check my phone" required>
+        <button class="btn primary">Add</button>
+      </form>
+      <ol id="scoreList" class="score-list"></ol>
+      <div id="scoreSummary" class="score-summary"></div>
+    </section>
+
+    <!-- THE SYSTEM -->
+    <section id="view-laws" class="view">
+      <div class="section-head">
+        <h2>The Four Laws of Behavior Change</h2>
+        <p class="muted">Every habit runs a loop: <b>cue → craving → response → reward</b>. The system is built around that loop.</p>
+      </div>
+      <div class="laws">
+        <article class="law"><span class="law-n">1</span><h3>Make it obvious</h3><p>The cue must be visible. Use an implementation intention ("I will [behavior] at [time] in [location]") and habit stacking ("After [current habit], I will [new habit]").</p><p class="inv"><b>Break a habit:</b> make it invisible – remove the cues from your environment.</p></article>
+        <article class="law"><span class="law-n">2</span><h3>Make it attractive</h3><p>Pair what you <i>need</i> to do with what you <i>want</i> to do (temptation bundling). Join a culture where your desired behavior is normal.</p><p class="inv"><b>Break a habit:</b> make it unattractive – name its real cost.</p></article>
+        <article class="law"><span class="law-n">3</span><h3>Make it easy</h3><p>Reduce friction. Use the Two-Minute Rule – start with a version that takes under two minutes. Repetitions matter more than time spent.</p><p class="inv"><b>Break a habit:</b> make it difficult – add friction, use a commitment device.</p></article>
+        <article class="law"><span class="law-n">4</span><h3>Make it satisfying</h3><p>What is rewarded is repeated. Track progress, don't break the chain, and never miss twice.</p><p class="inv"><b>Break a habit:</b> make it unsatisfying – get an accountability partner.</p></article>
+      </div>
+      <div class="compound">
+        <h3>The power of tiny gains</h3>
+        <div class="compound-row">
+          <div><strong>37.78×</strong><small>1% better every day for a year (1.01³⁶⁵)</small></div>
+          <div><strong>0.03×</strong><small>1% worse every day for a year (0.99³⁶⁵)</small></div>
+        </div>
+      </div>
+      <div class="data-tools">
+        <h3>Your data</h3>
+        <p class="muted">Everything is stored only in this browser. Export a backup now and then.</p>
+        <div class="row">
+          <button class="btn" id="exportBtn">Export JSON</button>
+          <label class="btn">Import JSON<input type="file" id="importInput" accept="application/json" hidden></label>
+          <button class="btn danger" id="resetBtn">Delete everything</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- HABIT FORM -->
+  <dialog id="habitDialog">
+    <form id="habitForm" method="dialog">
+      <h2 id="dialogTitle">New habit</h2>
+
+      <div class="type-switch">
+        <label><input type="radio" name="type" value="build" checked> Build a good habit</label>
+        <label><input type="radio" name="type" value="break"> Break a bad habit</label>
+      </div>
+
+      <label>Habit<input name="name" required placeholder="e.g. Read"></label>
+      <label>Identity – "I am the type of person who…"<input name="identity" placeholder="e.g. reads every day"></label>
+
+      <fieldset>
+        <legend><span class="law-n sm">1</span> <span data-build>Make it obvious</span><span data-break hidden>Make it invisible</span></legend>
+        <div class="grid2">
+          <label>When<input name="time" placeholder="e.g. 9:00 PM"></label>
+          <label>Where<input name="place" placeholder="e.g. in bed"></label>
+        </div>
+        <label data-build>Habit stack – "After I…"<input name="stack" placeholder="e.g. brush my teeth"></label>
+        <label data-break hidden>Which cues will you remove?<input name="cue" placeholder="e.g. phone stays in another room"></label>
+      </fieldset>
+
+      <fieldset>
+        <legend><span class="law-n sm">2</span> <span data-build>Make it attractive</span><span data-break hidden>Make it unattractive</span></legend>
+        <label data-build>Temptation bundle – pair it with<input name="bundle" placeholder="e.g. my favourite tea"></label>
+        <label data-break hidden>What does it really cost you?<input name="cost" placeholder="e.g. 2 hours of sleep every night"></label>
+      </fieldset>
+
+      <fieldset>
+        <legend><span class="law-n sm">3</span> <span data-build>Make it easy</span><span data-break hidden>Make it difficult</span></legend>
+        <label data-build>Two-minute version<input name="twoMin" placeholder="e.g. read one page"></label>
+        <label data-break hidden>How will you add friction?<input name="friction" placeholder="e.g. delete the app"></label>
+      </fieldset>
+
+      <fieldset>
+        <legend><span class="law-n sm">4</span> <span data-build>Make it satisfying</span><span data-break hidden>Make it unsatisfying</span></legend>
+        <label data-build>Immediate reward<input name="reward" placeholder="e.g. tick it off in the tracker"></label>
+        <label data-break hidden>Accountability partner / habit contract<input name="partner" placeholder="e.g. my friend John"></label>
+      </fieldset>
+
+      <div class="field">Days
+        <div class="days" id="daysPicker"></div>
+      </div>
+
+      <div class="dialog-actions">
+        <button type="button" class="btn danger" id="deleteHabitBtn" hidden>Delete</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn" id="cancelBtn">Cancel</button>
+        <button class="btn primary" value="save">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status"></div>
+
+  <footer>THOMSON SYSTEM · inspired by the ideas in <i>Atomic Habits</i> by James Clear</footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
