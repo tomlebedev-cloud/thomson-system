@@ -1,6 +1,7 @@
 // THOMSON SYSTEM service worker: network-first for the app itself so updates show up
 // immediately when online, cache fallback when offline.
-const CACHE = 'thomson-v1';
+// Other sites on the same github.io origin share Cache Storage, so only touch our own caches.
+const CACHE = 'thomson-v2';
 const SHELL = [
   './', './index.html', './style.css', './app.js', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png',
@@ -13,7 +14,7 @@ self.addEventListener('install', e => {
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+      .then(keys => Promise.all(keys.filter(k => k.startsWith('thomson-') && k !== CACHE).map(k => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
