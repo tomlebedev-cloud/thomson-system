@@ -37,6 +37,7 @@
     <button class="tab active" data-view="today">Today</button>
     <button class="tab" data-view="habits">Habits</button>
     <button class="tab" data-view="tracker">Tracker</button>
+    <button class="tab" data-view="progress">Progress</button>
     <button class="tab" data-view="identity">Identity</button>
     <button class="tab" data-view="scorecard">Scorecard</button>
     <button class="tab" data-view="laws">The System</button>
@@ -75,9 +76,18 @@
     <section id="view-tracker" class="view">
       <div class="section-head">
         <h2>Habit tracker</h2>
-        <p class="muted">Last 35 days. Click a cell to mark or unmark it. Don't break the chain.</p>
+        <p class="muted">Last 35 days. Click a cell to cycle it: done → skipped → empty. Skipped days (rest or sick days) don't break the chain.</p>
       </div>
       <div id="trackerGrid"></div>
+    </section>
+
+    <!-- PROGRESS -->
+    <section id="view-progress" class="view">
+      <div class="section-head">
+        <h2>Progress</h2>
+        <p class="muted">Your weekly review. You do not rise to the level of your goals, you fall to the level of your systems.</p>
+      </div>
+      <div id="progressView"></div>
     </section>
 
     <!-- IDENTITY -->
@@ -125,6 +135,7 @@
       <div class="data-tools">
         <h3>Your data</h3>
         <p class="muted">Everything is stored only in this browser. Export a backup now and then.</p>
+        <p class="muted" id="backupInfo"></p>
         <div class="row">
           <button class="btn" id="exportBtn">Export JSON</button>
           <label class="btn">Import JSON<input type="file" id="importInput" accept="application/json" hidden></label>

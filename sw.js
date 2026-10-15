@@ -1,7 +1,7 @@
 // THOMSON SYSTEM service worker: network-first for the app itself so updates show up
 // immediately when online, cache fallback when offline.
 // Other sites on the same github.io origin share Cache Storage, so only touch our own caches.
-const CACHE = 'thomson-v2';
+const CACHE = 'thomson-v3';
 const SHELL = [
   './', './index.html', './style.css', './app.js', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png',
