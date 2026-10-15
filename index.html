@@ -67,7 +67,10 @@
     <section id="view-habits" class="view">
       <div class="section-head">
         <h2>Your habits</h2>
-        <button class="btn primary" id="newHabitBtn">+ New habit</button>
+        <div class="row tight">
+          <button class="btn" id="calendarBtn" title="Download a calendar file with a repeating reminder for each habit">📅 Add reminders to calendar</button>
+          <button class="btn primary" id="newHabitBtn">+ New habit</button>
+        </div>
       </div>
       <div id="habitList" class="cards"></div>
     </section>
@@ -164,6 +167,7 @@
           <label>When<input name="time" placeholder="e.g. 9:00 PM"></label>
           <label>Where<input name="place" placeholder="e.g. in bed"></label>
         </div>
+        <label>Reminder time <small class="hint">– used by "Add reminders to calendar"</small><input type="time" name="remind"></label>
         <label data-build>Habit stack – "After I…"<input name="stack" placeholder="e.g. brush my teeth"></label>
         <label data-break hidden>Which cues will you remove?<input name="cue" placeholder="e.g. phone stays in another room"></label>
       </fieldset>

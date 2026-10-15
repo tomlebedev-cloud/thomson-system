@@ -8,6 +8,7 @@ A habit system built on the ideas in *Atomic Habits* by James Clear. It's a stat
 - **Habits**: design every habit through the Four Laws of Behavior Change:
   - *Build*: obvious (implementation intention and habit stacking), attractive (temptation bundling), easy (Two-Minute Rule), satisfying (immediate reward)
   - *Break*: invisible, unattractive, difficult, unsatisfying (the inversion of each law)
+- **Calendar reminders**: give a habit a reminder time, then tap **📅 Add reminders to calendar** on the Habits tab. It downloads an `.ics` file with a repeating event and alert for each habit on its scheduled days. Open it to add them to Google Calendar, Apple Calendar or Outlook. If you change times later, delete the old THOMSON events before importing again.
 - **Habits** can be reordered (↑ ↓) and archived. Archived habits leave Today and the Tracker but keep their identity votes, and can be restored.
 - **Tracker**: a 35-day "don't break the chain" grid with completion rates. Click a cell to cycle done → skipped → empty.
 - **Progress**: a weekly review with this week vs. last week, current and best streaks, 7/30-day and all-time rates, and a 12-week trend for each habit.

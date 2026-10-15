@@ -229,6 +229,8 @@ input:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-col
 .compound-row div:last-child strong { color: var(--bad); }
 .compound-row small { color: var(--muted); }
 .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.row.tight { margin-top: 0; }
+.hint { font-weight: 500; }
 
 /* Dialog */
 dialog {

@@ -21,7 +21,7 @@ function defaultState() {
       id: uid(), type: 'build', name: 'Read', identity: 'reads every day',
       time: '9:00 PM', place: 'in bed', stack: 'brush my teeth',
       bundle: 'a cup of herbal tea', twoMin: 'read one page', reward: 'tick it off in the tracker',
-      days: [0, 1, 2, 3, 4, 5, 6], created: todayKey(), archived: null,
+      days: [0, 1, 2, 3, 4, 5, 6], created: todayKey(), archived: null, remind: '21:00',
     }],
     log: {},
     skips: {},
@@ -46,6 +46,7 @@ function normalize(data) {
     const text = Object.fromEntries(TEXT_FIELDS.map(f => [f, str(h[f])]));
     return {
       ...text, id, type: h.type === 'break' ? 'break' : 'build',
+      remind: /^\d{2}:\d{2}$/.test(h.remind) ? h.remind : '',
       days: days.length ? days : [0, 1, 2, 3, 4, 5, 6],
       created: date(h.created) || todayKey(), archived: date(h.archived),
     };
@@ -217,6 +218,76 @@ function intentionText(h) {
   return `I will ${action}${parts ? ` ${parts}` : ''}.${min}`;
 }
 
+// Reads free-text times like "9:00 PM", "at 7am", "21:30" or "6.45" as "HH:MM"; null if it isn't a time.
+function parseTime(s = '') {
+  const m = s.trim().match(/^(?:at\s+)?(\d{1,2})(?:[:.](\d{2}))?\s*([ap])?\.?\s*(?:m\.?)?$/i);
+  if (!m) return null;
+  let h = +m[1];
+  const min = +(m[2] ?? 0), ap = m[3]?.toLowerCase();
+  if (min > 59) return null;
+  if (ap) { if (h < 1 || h > 12) return null; h = (h % 12) + (ap === 'p' ? 12 : 0); }
+  else if (h > 23 || m[2] === undefined) return null; // a bare "9" is too ambiguous
+  return `${String(h).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
+}
+const reminderTime = h => h.remind || parseTime(h.time);
+
+// ---------- Calendar reminders (.ics) ----------
+
+const ICS_DAYS = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU'];
+const icsText = s => String(s).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
+const icsStamp = d => `${keyOf(d).replace(/-/g, '')}T${[d.getHours(), d.getMinutes(), d.getSeconds()].map(n => String(n).padStart(2, '0')).join('')}`;
+
+// RFC 5545: lines longer than 75 octets continue on the next line, which starts with a space.
+function icsFold(line) {
+  const enc = new TextEncoder();
+  const out = [];
+  let cur = '', bytes = 0;
+  for (const ch of line) {
+    const b = enc.encode(ch).length;
+    if (bytes + b > (out.length ? 74 : 75)) { out.push(cur); cur = ''; bytes = 0; }
+    cur += ch; bytes += b;
+  }
+  out.push(cur);
+  return out.join('\r\n ');
+}
+
+function buildIcs(habits) {
+  const now = new Date();
+  const utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+  const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//THOMSON SYSTEM//Habit reminders//EN',
+    'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'X-WR-CALNAME:THOMSON habits'];
+  for (const h of habits) {
+    const [hh, mm] = reminderTime(h).split(':').map(Number);
+    // Start on the first scheduled day from today, so the first event is a real occurrence.
+    let start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hh, mm);
+    for (let i = 0; i < 7 && !isScheduled(h, start); i++) start = addDays(start, 1);
+    const title = h.type === 'break' ? `Avoid: ${h.name}` : h.name;
+    const desc = [intentionText(h), h.identity && `I am someone who ${h.identity}.`, h.type === 'build' && h.reward && `Reward: ${h.reward}.`]
+      .filter(Boolean).join('\n');
+    lines.push('BEGIN:VEVENT', `UID:thomson-${h.id}@thomson-system`, `DTSTAMP:${icsStamp(utc)}Z`,
+      `DTSTART:${icsStamp(start)}`, 'DURATION:PT5M',
+      `RRULE:FREQ=WEEKLY;BYDAY=${h.days.map(d => ICS_DAYS[d]).join(',')}`,
+      `SUMMARY:${icsText(title)}`, `DESCRIPTION:${icsText(desc)}`, 'TRANSP:TRANSPARENT',
+      'BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${icsText(title)}`, 'TRIGGER:PT0S', 'END:VALARM',
+      'END:VEVENT');
+  }
+  lines.push('END:VCALENDAR');
+  return `${lines.map(icsFold).join('\r\n')}\r\n`;
+}
+
+function exportCalendar() {
+  const list = active().filter(reminderTime);
+  if (!list.length) return toast('Give a habit a reminder time first (Edit → Reminder time)');
+  const blob = new Blob([buildIcs(list)], { type: 'text/calendar;charset=utf-8' });
+  const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: 'thomson-reminders.ics' });
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  const missing = active().length - list.length;
+  toast(`${list.length} reminder${list.length > 1 ? 's' : ''} exported – open the file to add ${list.length > 1 ? 'them' : 'it'} to your calendar`
+    + (missing ? ` (${missing} without a time skipped)` : ''));
+}
+$('#calendarBtn').onclick = exportCalendar;
+
 // ---------- Rendering ----------
 
 const esc = (s = '') => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -323,6 +394,7 @@ function habitCard(h, i, list) {
     <div class="habit-title">${esc(h.name)}
       <span class="chip ${h.type === 'break' ? 'tag-break' : 'tag-build'}">${h.type === 'break' ? 'Break' : 'Build'}</span>
       <span class="chip">${h.days.length === 7 ? 'Every day' : h.days.map(d => DAY_NAMES[d]).join(' ')}</span>
+      ${!h.archived && reminderTime(h) ? `<span class="chip">⏰ ${reminderTime(h)}</span>` : ''}
       ${h.archived ? `<span class="chip">Archived ${fmtDate(parseKey(h.archived))} · ${totalVotes(h)} votes kept</span>` : ''}
     </div>
     <p class="intention">${esc(intentionText(h))}</p>
@@ -501,6 +573,7 @@ function openDialog(h) {
       el.value = h[el.name] ?? '';
     }
     form.type.value = h.type;
+    form.remind.value = reminderTime(h) || '';
   }
   pickedDays = h ? [...h.days] : [0, 1, 2, 3, 4, 5, 6];
   renderDays();
